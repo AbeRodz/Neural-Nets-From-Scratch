@@ -2,33 +2,41 @@
 #include <iostream>
 #include <stdexcept>
 #include <iomanip>
+#include <chrono>
+#include <stdlib.h>
+
+
+#define N 1024
 
 Matrix::Matrix(int rows, int cols):
 ROWS(rows), COLS(cols)
 {
-    vals = new double[ROWS*COLS];
+    vals = new float[ROWS*COLS];
 }
 
 void Matrix::setMatrix(int r, int c) 
 {
-    int n;
+    float n;
     for(int r = 0; r< ROWS; ++r ){
         for(int c = 0; c< COLS;++c){
-            std::cout<< "enter value "<< "row: "<< r << "col: "<< c<< std::endl;
-            std::cin >> n;
+            /*std::cout<< "enter value "<< "row: "<< r << "col: "<< c<< std::endl;
+            std::cin >> n; */
+            n = rand();
                 at(r,c) = n;
          }
 
     }
 }
 
-double Matrix::getValueAt(int r, int c) const 
+float Matrix::getValueAt(int r, int c) const 
 {
     if (r < 0 or r >= ROWS or c<0 or c>= COLS){
         throw std::out_of_range("Matrix out of range");
     }
     return at(r,c);
 }
+
+
 
 Matrix Matrix::addMatrix(const Matrix& m, const Matrix& n)
 {
@@ -44,7 +52,7 @@ Matrix Matrix::addMatrix(const Matrix& m, const Matrix& n)
         return ret;
     }
 
-Matrix Matrix::scalarMultiplication(double n)
+Matrix Matrix::scalarMultiplication(float n)
 {
     Matrix ret(ROWS, COLS);
     for(int i = 0; i< ROWS* COLS; ++i){
@@ -61,10 +69,16 @@ Matrix Matrix::dotProduct(const Matrix& m, const Matrix& n)
         {
             throw std::out_of_range("Matrices are not of the same dimension");
         }
-    Matrix ret(m.rows(), m.cols());
-    for(int i = 0; i< m.rows() * m.cols(); ++i ){
-        ret.vals[i] = vals[i] + m.vals[i];
-                
+    Matrix ret(ROWS, n.cols());
+    for(int i = 0; i< ROWS; ++i ){
+        for(int j = 0; j< COLS; ++j){
+            ret(i,j) = 0.0;
+            for(int k=0; k< COLS; ++k){
+              ret(i,j) += m(i,k)*n(k,j);  
+             
+                }
+            }
+             //vals[i] = ret.vals[i];
         }
         return ret;
 }    
@@ -87,12 +101,21 @@ Matrix::~Matrix()
 
 int main(){
 
-    Matrix m1(2,2);
+    Matrix m1(N,N);
     m1.setMatrix(m1.rows(), m1.cols());
+    //int N = m1.rows()*m1.cols();
+    double tflop = (2.0*N*N*N)*1e-9;
     Matrix *m2 = new Matrix(m1);
     //Matrix m4 = m1.addMatrix(*m2, m1);
-    m1.scalarMultiplication(0.5);
+    //m1.print(*m2);
+    //m1.scalarMultiplication(0.5);
+    //m1.dotProduct(m1,*m2);
+    auto start = std::chrono::steady_clock::now();
     m1.dotProduct(m1,*m2);
-    m1.print(m1);
+    auto stop = std::chrono::steady_clock::now();
+    std::chrono::duration<double> diff = (stop-start);
+    std::cout << "total duration: " << diff.count()<<std::endl;
+    
+    std::cout << "GFLOP/S: " << tflop/diff.count();
 
 }
