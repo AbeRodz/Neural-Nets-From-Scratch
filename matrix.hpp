@@ -14,10 +14,17 @@ class Matrix{
 
         int rows(void) const { return ROWS;}
         int cols(void) const {return COLS;}
-        void setMatrix(int r, int c) ;
-        float getValueAt(int r, int c) const ;
+        
+        void setMatrix(int r, int c);
+        void setMatrixRandom(void);
+        float getValueAt(int r, int c) const;
+        void setValueAt(int r, int c, float val);
         void print(const Matrix& m);
-        Matrix addMatrix( const Matrix& m, const Matrix& n);
+
+        Matrix addMatrix(const Matrix& m);
+        Matrix operator+(const Matrix& m);
+
+        Matrix substractMatrix( const Matrix& m, const Matrix& n);
         Matrix scalarMultiplication(float n);
         Matrix dotProduct(const Matrix& m, const Matrix& n);
         
@@ -27,9 +34,9 @@ class Matrix{
     const int COLS;
     float* vals;
 
-    float& at(int r, int c) const
+    inline float& at(int r, int c) const
     {
-        return vals[COLS* r + c];
+        return vals[COLS * r + c];
     }
 
 
