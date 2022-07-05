@@ -27,6 +27,7 @@ class Matrix{
         Matrix substractMatrix( const Matrix& m, const Matrix& n);
         Matrix scalarMultiplication(float n);
         Matrix dotProduct(const Matrix& m, const Matrix& n);
+        Matrix transpose();
         
 
     private:

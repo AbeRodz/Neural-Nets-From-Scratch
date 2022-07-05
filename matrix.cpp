@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 
-#define N 2048
+#define N 4
 
 Matrix::Matrix(int rows, int cols):
 ROWS(rows), COLS(cols)
@@ -116,8 +116,8 @@ Matrix Matrix::dotProduct(const Matrix& m, const Matrix& n)
         return ret;
 }    
 
-void Matrix::print(const Matrix& m){
-
+void print(const Matrix& m){
+    std::cout<<std::fixed <<std::setprecision(1);
     for(int r = 0; r< m.rows(); ++r ){
         for(int c = 0; c<m.cols();++c){
             std::cout << (c >0 ? " ":"") << std::setw(4);
@@ -125,6 +125,17 @@ void Matrix::print(const Matrix& m){
          }
          std::cout << std::endl;
     }
+}
+
+Matrix Matrix::transpose(){
+    
+    Matrix ret(ROWS, COLS);
+    for(int i = 0; i< ROWS; ++i ){
+        for(int j = 0; j< COLS; ++j){
+                ret(j,i) = at(i,j);
+            }
+        }
+        return ret;
 }
 
 Matrix::~Matrix()
@@ -144,12 +155,13 @@ int main(){
     //m1.dotProduct(m1,*m2);
     
     //m1.dotProduct(m1,*m2);
-    m1.print(m1);
+    print(m1);
     //m1.print(*m2);
 
-    Matrix m3(N,N);
-    m3.setMatrixRandom();
-    m1.print(m3);
+    Matrix m3 = m1.transpose();
+    //m3.setMatrixRandom();
+    print(m3);
+
     auto start = std::chrono::steady_clock::now();
     Matrix m4 = m1.addMatrix(m3);
     //m1.print(m4);
