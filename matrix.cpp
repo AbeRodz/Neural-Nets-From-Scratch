@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 
-#define N 4
+#define N 8
 
 Matrix::Matrix(int rows, int cols):
 ROWS(rows), COLS(cols)
