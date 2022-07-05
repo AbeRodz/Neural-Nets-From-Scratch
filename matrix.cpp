@@ -39,6 +39,7 @@ void Matrix::setMatrixRandom(void){
     }
 }
 
+
 float Matrix::getValueAt(int r, int c) const 
 {
     if (r < 0 or r >= ROWS or c<0 or c>= COLS){
@@ -52,9 +53,28 @@ void Matrix::setValueAt(int r, int c, float val) {
         throw std::out_of_range("Matrix out of range");
     }
     at(r,c) = val;
+    }
+
+
+void fill(Matrix& m, float val){
+    for(int r = 0; r< m.rows(); ++r ){
+        for(int c = 0; c< m.cols();++c){
+            
+            m.setValueAt(r,c,val); 
+        }
+    }
 }
 
-
+Matrix Matrix::identity(int size){
+    Matrix ret(size,size);
+    for(int r = 0; r< ret.rows(); ++r ){
+        for(int c = 0; c< ret.cols();++c){
+            r==c ? ret.setValueAt(r,c,1) :ret.setValueAt(r,c,0) ;
+            
+        }
+    }
+    return ret;
+}
 
 Matrix Matrix::addMatrix(const Matrix& m){
     if (ROWS != m.rows()  or COLS!= m.cols() )
@@ -72,17 +92,21 @@ Matrix Matrix::operator+(const Matrix& m){
         return addMatrix(m);
 }
 
-Matrix Matrix::substractMatrix( const Matrix& m, const Matrix& n){
-    if (m.rows() != n.rows() or m.cols() != n.cols())
+Matrix Matrix::substractMatrix( const Matrix& m){
+    if (ROWS != m.rows()  or COLS!= m.cols() )
         {
             throw std::out_of_range("Matrices are not of the same dimension");
         }
-    Matrix ret(m.rows(), m.cols());
+    Matrix ret(ROWS, COLS);
     for(int i = 0; i< m.rows() * m.cols(); ++i ){
         ret.vals[i] = vals[i] - m.vals[i];
                 
         }
         return ret;
+}
+
+Matrix Matrix::operator-(const Matrix& m){
+        return substractMatrix(m);
 }
 
 Matrix Matrix::scalarMultiplication(float n)
@@ -163,8 +187,13 @@ int main(){
     print(m3);
 
     auto start = std::chrono::steady_clock::now();
-    Matrix m4 = m1.addMatrix(m3);
-    //m1.print(m4);
+    Matrix m4 = m1.substractMatrix(m3);
+    Matrix m5(N,N);
+    print(m5);
+    fill(m5,1);
+    print(m5);
+    Matrix m6 = Matrix::identity(N);
+    print(m6);
     auto stop = std::chrono::steady_clock::now();
     std::chrono::duration<double> diff = (stop-start);
     std::cout << "total duration: " << diff.count()<<std::endl;

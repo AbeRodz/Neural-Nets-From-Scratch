@@ -17,12 +17,18 @@ class Matrix{
         
         void setMatrix(int r, int c);
         void setMatrixRandom(void);
+        void fill(Matrix& m, float val);
+        static Matrix identity(int size);
+
         float getValueAt(int r, int c) const;
         void setValueAt(int r, int c, float val);
         void print(const Matrix& m);
 
         Matrix addMatrix(const Matrix& m);
         Matrix operator+(const Matrix& m);
+
+        Matrix substractMatrix( const Matrix& m);
+        Matrix operator-(const Matrix& m);
 
         Matrix substractMatrix( const Matrix& m, const Matrix& n);
         Matrix scalarMultiplication(float n);
